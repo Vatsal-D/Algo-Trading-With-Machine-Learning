@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Regression Analysis</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: "Arial", sans-serif;
+    }
+
+    .image-container {
+      position: relative;
+    }
+
+    .image-container img {
+      object-fit: cover;
+    }
+
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    h1 {
+      color: #00ff00;
+      font-size: 36px;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px #000;
+    }
+
+    button {
+      background-color: #0000ff;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      text-shadow: 2px 2px 4px #000;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0066ff;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #0f0;
+      padding: 10px;
+      text-align: center;
+      font-family: "Unique Font", sans-serif;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .navbar a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 18px;
+      text-shadow: 2px 2px 4px #000;
+      transition: color 0.3s ease;
+    }
+
+    .navbar a:hover {
+      color: #ff00ff;
+    }
+  </style>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <div class="navbar">
+    <a href="homepage.html">Home</a>
+    <a href="mlanal.html">Algorithm Analysis</a>
+    <a href="data.html">Future Value Prediction</a>
+  </div>
+
+  <div class="image-container">
+    <img src="stockmarket.jpeg" alt="Cover Image">
+    <div class="content">
+      <h1 style="color: #00ff00; text-shadow: 2px 2px 4px #000;">Future Close Values Prediction Using different Algorithms</h1>
+      <button onclick="redirectTo('linear')" style="background-color: #0000ff; text-shadow: 2px 2px 4px #000;">Linear Regression</button>
+      <br>
+      <button onclick="redirectTo('random')" style="background-color: #0000ff; text-shadow: 2px 2px 4px #000;">Random Forest Regression</button>
+      <br>
+      <button onclick="redirectTo('decision')" style="background-color: #0000ff; text-shadow: 2px 2px 4px #000;">Decision Tree Regression</button>
+      <br>
+      <button onclick="redirectTo('lstm')" style="background-color: #0000ff; text-shadow: 2px 2px 4px #000;">LSTM</button>
+      <br>
+      <button onclick="redirectTo('neural')" style="background-color: #0000ff; text-shadow: 2px 2px 4px #000;">Neural Network</button>
+    </div>
+  </div>
+
+  <script>
+    function redirectTo(regressionType) {
+      window.location.href = "data-entry2.html?type=" + regressionType;
+    }
+  </script>
+</body>
+</html>

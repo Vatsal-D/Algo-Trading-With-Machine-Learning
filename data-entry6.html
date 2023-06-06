@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Entry</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <h1>Data Entry</h1>
+  <form onsubmit="return plotGraph()">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" name="startDate" required><br><br>
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" required><br><br>
+    <input type="submit" value="Plot Graph">
+  </form>
+
+  <div id="graph"></div>
+
+  <script>
+    function plotGraph() {
+      var regressionType = new URLSearchParams(window.location.search).get("type");
+      var startDate = document.getElementById("startDate").value;
+      var endDate = document.getElementById("endDate").value;
+
+      var filename;
+      if (regressionType === "linear") {
+        filename = "lr.csv";
+      } else if (regressionType === "random") {
+        filename = "rfr.csv";
+      } else if (regressionType === "decision") {
+        filename = "dtr.csv";
+      }
+
+      // Code to read the CSV file and plot the graph using Plotly
+      Plotly.d3.csv(filename, function(data) {
+        var x = [];
+        var close = [];
+        var volume = [];
+        data.forEach(function(row) {
+          x.push(row.Date);
+          close.push(parseFloat(row['Predicted Closing Value']));
+          volume.push(parseFloat(row.Volume));
+        });
+
+        // Sort the x and y values in ascending order of dates
+        var sortedIndices = x.map((_, i) => i).sort((a, b) => new Date(x[a]) - new Date(x[b]));
+        var sortedX = sortedIndices.map(i => x[i]);
+        var sortedClose = sortedIndices.map(i => close[i]);
+        var sortedVolume = sortedIndices.map(i => volume[i]);
+
+        var graphDiv = document.getElementById('graph');
+        var trace1 = {
+          x: sortedX,
+          y: sortedClose,
+          yaxis: 'y1',
+          name: 'Predicted Closing Value',
+          type: 'scatter',
+          mode: 'lines'
+        };
+
+        var trace2 = {
+          x: sortedX,
+          y: sortedVolume,
+          yaxis: 'y2',
+          name: 'Volume',
+          type: 'bar'
+        };
+
+        var layout = {
+          title: 'Dual-Axis Chart',
+          xaxis: { title: 'Date' },
+          yaxis: { title: 'Predicted Closing Value', side: 'left' },
+          yaxis2: { title: 'Volume', side: 'right', overlaying: 'y' },
+          showlegend: true,
+          legend: { x: 0, y: 1.1, orientation: 'h' }
+        };
+
+        var data = [trace1, trace2];
+
+        Plotly.newPlot(graphDiv, data, layout);
+      });
+
+      return false; // Prevent form submission
+    }
+  </script>
+</body>
+</html>

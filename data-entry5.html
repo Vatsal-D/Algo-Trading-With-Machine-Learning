@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Entry</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <h1>Data Entry</h1>
+  <form onsubmit="return plotGraph()">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" name="startDate" required><br><br>
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" required><br><br>
+    <input type="submit" value="Plot Graph">
+  </form>
+
+  <div id="graph"></div>
+
+  <script>
+    function plotGraph() {
+      var regressionType = new URLSearchParams(window.location.search).get("type");
+      var startDate = document.getElementById("startDate").value;
+      var endDate = document.getElementById("endDate").value;
+
+      var filename;
+      if (regressionType === "linear") {
+        filename = "lr.csv";
+      } else if (regressionType === "random") {
+        filename = "rfr.csv";
+      } else if (regressionType === "decision") {
+        filename = "dtr.csv";
+      }
+
+      // Code to read the CSV file and plot the graph using Plotly
+      Plotly.d3.csv(filename, function(data) {
+        var x = [];
+        var close = [];
+        data.forEach(function(row) {
+          x.push(row.Date);
+          close.push(parseFloat(row['Predicted Closing Value']));
+        });
+
+        // Sort the x and y values in ascending order of dates
+        var sortedIndices = x.map((_, i) => i).sort((a, b) => new Date(x[a]) - new Date(x[b]));
+        var sortedX = sortedIndices.map(i => x[i]);
+        var sortedClose = sortedIndices.map(i => close[i]);
+
+        var graphDiv = document.getElementById('graph');
+        var trace = {
+          x: sortedX,
+          y: sortedClose,
+          type: 'bar'
+        };
+
+        var layout = {
+          title: 'Column Chart',
+          xaxis: { title: 'Date' },
+          yaxis: { title: 'Predicted Closing Value' }
+        };
+
+        var data = [trace];
+
+        Plotly.newPlot(graphDiv, data, layout);
+      });
+
+      return false; // Prevent form submission
+    }
+  </script>
+</body>
+</html>

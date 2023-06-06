@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Entry</title>
+  <style>
+    body {
+      font-family: "Arial", sans-serif;
+      background-color: #333;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    #navbar {
+      background-color: #000;
+      padding: 10px;
+    }
+
+    #navbar a {
+      color: #fff;
+      text-decoration: none;
+      margin-right: 20px;
+    }
+
+    h1 {
+      color: #00ff00;
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+      text-shadow: 2px 2px 4px #000;
+    }
+
+    form {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="date"],
+    select {
+      padding: 5px;
+      font-size: 16px;
+    }
+
+    input[type="submit"] {
+      background-color: #0000ff;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 10px;
+      cursor: pointer;
+      text-shadow: 2px 2px 4px #000;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0066ff;
+    }
+
+    #graph {
+      margin-top: 30px;
+    }
+  </style>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+  <div id="navbar">
+    <a href="">Home</a>
+    <a href="mlanal.html">Algorithm Analysis</a>
+    <a href="data.html">Future Value Prediction</a>
+  </div>
+
+  <h1>Data Entry</h1>
+  <form onsubmit="return plotGraph()">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" name="startDate" required><br><br>
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" required><br><br>
+    <label for="graphType">Graph Type:</label>
+    <select id="graphType" name="graphType">
+      <option value="scatter">Scatter Plot</option>
+      <option value="line">Line Plot</option>
+      <option value="bar">Bar Chart</option>
+      <option value="column">Column Chart</option>
+      <option value="dual">Dual Axis Chart</option>
+    </select><br><br>
+    <input type="submit" value="Plot Graph">
+  </form>
+
+  <div id="graph"></div>
+
+  <script>
+    function plotGraph() {
+      var regressionType = new URLSearchParams(window.location.search).get("type");
+      var startDate = document.getElementById("startDate").value;
+      var endDate = document.getElementById("endDate").value;
+      var graphType = document.getElementById("graphType").value;
+
+      var filename;
+      if (regressionType === "linear") {
+        filename = "lr.csv";
+      } else if (regressionType === "random") {
+        filename = "rfr.csv";
+      } else if (regressionType === "decision") {
+        filename = "dtr.csv";
+      } else if (regressionType === "lstm") {
+        filename = "lstm.csv";
+      } else if (regressionType === "neural") {
+        filename = "nn.csv";
+      }
+
+      // Code to read the CSV file and plot the graph using Plotly
+      Plotly.d3.csv(filename, function(data) {
+        var x = [];
+        var y = [];
+        data.forEach(function(row) {
+          x.push(row.Date);
+          y.push(parseFloat(row['Predicted Closing Value']));
+        });
+
+        // Sort the x and y values in ascending order of dates
+        var sortedIndices = x.map((_, i) => i).sort((a, b) => new Date(x[a]) - new Date(x[b]));
+        var sortedX = sortedIndices.map(i => x[i]);
+        var sortedY = sortedIndices.map(i => y[i]);
+
+        var graphDiv = document.getElementById('graph');
+        var trace;
+        if (graphType === "scatter") {
+          trace = {
+            x: sortedX,
+            y: sortedY,
+            mode: 'markers',
+            type: 'scatter'
+          };
+        } else if (graphType === "line") {
+          trace = {
+            x: sortedX,
+            y: sortedY,
+            mode: 'lines',
+            type: 'scatter'
+          };
+        } else if (graphType === "bar" || graphType === "column") {
+          trace = {
+            x: sortedX,
+            y: sortedY,
+            type: 'bar'
+          };
+        } else if (graphType === "dual") {
+          var trace1 = {
+            x: sortedX,
+            y: sortedY,
+            type: 'bar',
+            name: 'Closing Value'
+          };
+          var trace2 = {
+            x: sortedX,
+            y: sortedY,
+            yaxis: 'y2',
+            type: 'scatter',
+            name: 'Predicted Closing Value'
+          };
+          var layout = {
+            title: 'Regression Analysis',
+            xaxis: { title: 'Date' },
+            yaxis: { title: 'Closing Value' },
+            yaxis2: {
+              title: 'Predicted Closing Value',
+              overlaying: 'y',
+              side: 'right'
+            }
+          };
+          Plotly.newPlot(graphDiv, [trace1, trace2], layout);
+          return false;
+        }
+
+        var layout = {
+          title: 'Regression Analysis',
+          xaxis: { title: 'Date' },
+          yaxis: { title: 'Predicted Closing Value' }
+        };
+
+        Plotly.newPlot(graphDiv, [trace], layout);
+      });
+
+      return false; // Prevent form submission
+    }
+  </script>
+</body>
+</html>

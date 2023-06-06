@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Machine Learning Algorithm Analysis</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      font-family: "Arial", sans-serif;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #333;
+      padding: 10px;
+      text-align: center;
+      font-family: "Unique Font", sans-serif;
+    }
+
+    .navbar a {
+      color: #00ff00;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 18px;
+      text-shadow: 2px 2px 4px #000;
+      transition: color 0.3s ease;
+    }
+
+    .navbar a:hover {
+      color: #ff00ff;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding-top: 40px; /* Add padding to move content below navbar */
+    }
+
+    h1 {
+      color: #00ff00;
+      font-size: 36px;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px #000;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .button-group button {
+      margin: 0 10px;
+    }
+
+    button {
+      background-color: #0000ff;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      text-shadow: 2px 2px 4px #000;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0066ff;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .modal-image {
+      max-width: 90%;
+      max-height: 90%;
+      border: 5px solid #00ff00;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      text-shadow: 2px 2px 4px #000;
+    }
+
+    .close-button:hover {
+      color: #ff00ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="homepage.html">Home</a>
+    <a href="mlanal.html">Algorithm Analysis</a>
+    <a href="data.html">Future Value Prediction</a>
+  </div>
+
+  <div class="content">
+    <img src="mlimage.png" alt="Beautiful Image">
+    <h1>Machine Learning Algorithm Analysis</h1>
+    <div class="button-group">
+      <button onclick="openModal('rmse')">RMSE Comparison</button>
+      <button onclick="openModal('r-square')">R Square Comparison</button>
+      <button onclick="openModal('neural-graph')">Neural Network Graph</button>
+      <button onclick="openModal('lstm-graph')">LSTM Graph</button>
+    </div>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="closeModal()">&times;</span>
+      <img id="modal-image" class="modal-image" src="" alt="Enlarged Image">
+    </div>
+  </div>
+
+  <script>
+    function openModal(analysisType) {
+      var file;
+      if (analysisType === 'rmse') {
+        file = 'rmseop.png';
+      } else if (analysisType === 'r-square') {
+        file = 'r2scoreop.png';
+      } else if (analysisType === 'neural-graph') {
+        file = 'Neuralop.png';
+      } else if (analysisType === 'lstm-graph') {
+        file = 'LSTMop.png';
+      }
+      var modalImage = document.getElementById('modal-image');
+      modalImage.src = file;
+      document.getElementById('modal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
